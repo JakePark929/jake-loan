@@ -5,7 +5,6 @@ import com.jake.loan.dto.CounselDTO;
 import com.jake.loan.exception.BaseException;
 import com.jake.loan.exception.ResultType;
 import com.jake.loan.repository.CounselRepository;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -107,5 +106,22 @@ class CounselServiceImplTest {
         assertThat(actual.getCounselId()).isSameAs(findId);
 //        assertThat(actual.getName()).isSameAs("Member Lee"); // 실패
         assertThat(actual.getName()).isSameAs(request.getName());
+    }
+
+    @Test
+    void Should_DeletedCounselEntity_When_RequestDeleteExistCounselInfo() {
+        Long targetId = 1L;
+
+        Counsel entity = Counsel.builder()
+                .counselId(1L)
+                .build();
+
+        when(counselRepository.save(ArgumentMatchers.any(Counsel.class))).thenReturn(entity);
+        when(counselRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+
+        counselService.delete(targetId);
+
+//        assertThat(entity.getIsDeleted()).isSameAs(false); // 실패
+        assertThat(entity.getIsDeleted()).isSameAs(true);
     }
 }
