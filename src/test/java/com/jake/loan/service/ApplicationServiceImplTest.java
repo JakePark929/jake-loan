@@ -67,4 +67,42 @@ class ApplicationServiceImplTest {
         assertThat(actual.getHopeAmount()).isSameAs(entity.getHopeAmount());
         assertThat(actual.getName()).isSameAs(entity.getName());
     }
+
+    @Test
+    void Should_ReturnUpdatedResponseOfExistApplicationEntity_When_RequestUpdateExistApplicationInfo() {
+        Long findId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(1L)
+                .hopeAmount(BigDecimal.valueOf(50000000))
+                .build();
+
+        ApplicationDTO.Request request = ApplicationDTO.Request.builder()
+                .hopeAmount(BigDecimal.valueOf(5000000))
+                .build();
+
+        when(applicationRepository.save(any(Application.class))).thenReturn(entity);
+        when(applicationRepository.findById(findId)).thenReturn(Optional.ofNullable(entity));
+
+        ApplicationDTO.Response actual = applicationService.update(findId, request);
+
+        assertThat(actual.getApplicationId()).isSameAs(findId);
+        assertThat(actual.getHopeAmount()).isSameAs(request.getHopeAmount());
+    }
+
+    @Test
+    void Should_DeletedApplicationEntity_When_RequestDeleteExistApplicationInfo() {
+        Long targetId = 1L;
+
+        Application entity = Application.builder()
+                .applicationId(1L)
+                .build();
+
+        when(applicationRepository.save(any(Application.class))).thenReturn(entity);
+        when(applicationRepository.findById(targetId)).thenReturn(Optional.ofNullable(entity));
+
+        applicationService.delete(targetId);
+
+        assertThat(entity.getIsDeleted()).isSameAs(true);
+    }
 }
