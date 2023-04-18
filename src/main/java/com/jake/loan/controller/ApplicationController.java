@@ -3,14 +3,17 @@ package com.jake.loan.controller;
 import com.jake.loan.dto.ApplicationDTO;
 import com.jake.loan.dto.ResponseDTO;
 import com.jake.loan.service.ApplicationService;
+import com.jake.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/applications")
 @RestController
 public class ApplicationController extends AbstractController {
     private final ApplicationService applicationService;
+    private final FileStorageService fileStorageService;
 
     @GetMapping("/{applicationId}")
     public ResponseDTO<ApplicationDTO.Response> get(@PathVariable Long applicationId) {
@@ -39,4 +42,9 @@ public class ApplicationController extends AbstractController {
         return ok(applicationService.acceptTerms(applicationId, request));
     }
 
+    @PostMapping("/files")
+    public ResponseDTO<Void> upload(MultipartFile file) {
+        fileStorageService.save(file);
+        return ok();
+    }
 }
