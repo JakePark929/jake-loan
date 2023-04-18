@@ -7,7 +7,8 @@ import java.nio.file.Path;
 import java.util.stream.Stream;
 
 public interface FileStorageService {
-    void save(MultipartFile file);
-    Resource load(String fileName);
-    Stream<Path> loadAll();
+    void save(Long applicationId, MultipartFile file);
+    Resource load(Long applicationId, String fileName);
+    Stream<Path> loadAll(Long applicationId);
+    void deleteAll(Long applicationId);
 }
