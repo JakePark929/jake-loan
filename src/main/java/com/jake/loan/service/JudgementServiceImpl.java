@@ -1,6 +1,8 @@
 package com.jake.loan.service;
 
+import com.jake.loan.domain.Application;
 import com.jake.loan.domain.Judgement;
+import com.jake.loan.dto.ApplicationDTO;
 import com.jake.loan.dto.JudgementDTO;
 import com.jake.loan.exception.BaseException;
 import com.jake.loan.exception.ResultType;
@@ -9,6 +11,8 @@ import com.jake.loan.repository.JudgementRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @Service
@@ -77,6 +81,25 @@ public class JudgementServiceImpl implements JudgementService {
         judgement.setIsDeleted(true);
 
         judgementRepository.save(judgement);
+    }
+
+    @Override
+    public ApplicationDTO.GrantAmount grant(Long judgementId) {
+        Judgement judgement = judgementRepository.findById(judgementId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        Long applicationId = judgement.getApplicationId();
+        Application application = applicationRepository.findById(applicationId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        BigDecimal approvalAmount = judgement.getApprovalAmount();
+        application.setApprovalAmount(approvalAmount);
+
+        applicationRepository.save(application);
+
+        return modelMapper.map(application, ApplicationDTO.GrantAmount.class);
     }
 
     private boolean isPresentApplication(Long applicationId) {
