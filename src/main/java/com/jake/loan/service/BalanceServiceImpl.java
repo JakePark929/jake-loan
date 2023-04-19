@@ -19,16 +19,19 @@ public class BalanceServiceImpl implements BalanceService {
 
     @Override
     public BalanceDTO.Response create(Long applicationId, BalanceDTO.Request request) {
-        // 1 row 에서 계속 업데이트
-        if(balanceRepository.findByApplicationId(applicationId).isPresent()) {
-            throw new BaseException(ResultType.SYSTEM_ERROR);
-        }
-
+        // 1 row 에서 계속 업데이트 함
         Balance balance = modelMapper.map(request, Balance.class);
 
         BigDecimal entryAmount = request.getEntryAmount();
         balance.setApplicationId(applicationId);
         balance.setBalance(entryAmount);
+
+        balanceRepository.findByApplicationId(applicationId).ifPresent(b -> {
+            balance.setBalanceId(b.getBalanceId());
+            balance.setIsDeleted(b.getIsDeleted());
+            balance.setCreatedAt(b.getCreatedAt());
+            balance.setUpdatedAt(b.getUpdatedAt());
+        });
 
         Balance saved = balanceRepository.save(balance);
 
