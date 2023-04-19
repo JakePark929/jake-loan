@@ -23,6 +23,16 @@ public class EntryServiceImpl implements EntryService {
     private final ModelMapper modelMapper;
 
     @Override
+    public EntryDTO.Response get(Long applicationId) {
+        Optional<Entry> entry = entryRepository.findByApplicationId(applicationId);
+        if (entry.isPresent()) {
+            return modelMapper.map(entry, EntryDTO.Response.class);
+        } else {
+            return null;
+        }
+    }
+
+    @Override
     public EntryDTO.Response create(Long applicationId, EntryDTO.Request request) {
         // 계약 체결 여부 검증
         if (!isContractedApplication(applicationId)) {
