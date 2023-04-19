@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -51,6 +52,37 @@ public class EntryServiceImpl implements EntryService {
                         .build());
 
         return modelMapper.map(entry, EntryDTO.Response.class);
+    }
+
+    @Override
+    public EntryDTO.UpdateResponse update(Long entryId, EntryDTO.Request request) {
+        // entry
+        Entry entry = entryRepository.findById(entryId).orElseThrow(() -> {
+            throw new BaseException(ResultType.SYSTEM_ERROR);
+        });
+
+        // before -> after
+        BigDecimal beforeEntryAmount = entry.getEntryAmount();
+        entry.setEntryAmount(request.getEntryAmount());
+
+        entryRepository.save(entry);
+
+        // balance update
+        Long applicationId = entry.getApplicationId();
+        balanceService.update(applicationId,
+                BalanceDTO.UpdateRequest.builder()
+                        .beforeEntryAmount(beforeEntryAmount)
+                        .afterEntryAmount(request.getEntryAmount())
+                        .build()
+        );
+
+        // response
+        return EntryDTO.UpdateResponse.builder()
+                .entryId(entryId)
+                .applicationId(applicationId)
+                .beforeEntryAmount(beforeEntryAmount)
+                .afterEntryAmount(request.getEntryAmount())
+                .build();
     }
 
     private boolean isContractedApplication(Long applicationId) {

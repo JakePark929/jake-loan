@@ -21,4 +21,9 @@ public class InternalController extends AbstractController {
     public ResponseDTO<EntryDTO.Response> create(@PathVariable Long applicationId, @RequestBody EntryDTO.Request request) {
         return ok(entryService.create(applicationId, request));
     }
+
+    @PutMapping("/entries/{entryId}")
+    public ResponseDTO<EntryDTO.UpdateResponse> update(@PathVariable Long entryId, @RequestBody EntryDTO.Request request) {
+        return ok(entryService.update(entryId, request));
+    }
 }
