@@ -4,6 +4,7 @@ import com.jake.loan.dto.ApplicationDTO;
 import com.jake.loan.dto.FileDTO;
 import com.jake.loan.dto.ResponseDTO;
 import com.jake.loan.service.ApplicationService;
+import com.jake.loan.service.BalanceService;
 import com.jake.loan.service.FileStorageService;
 import lombok.RequiredArgsConstructor;
 import org.apache.catalina.connector.Response;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 @RestController
 public class ApplicationController extends AbstractController {
     private final ApplicationService applicationService;
+    private final BalanceService balanceService;
     private final FileStorageService fileStorageService;
 
     @GetMapping("/{applicationId}")
