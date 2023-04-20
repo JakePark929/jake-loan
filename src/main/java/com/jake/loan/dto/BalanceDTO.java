@@ -1,9 +1,7 @@
 package com.jake.loan.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.jake.loan.constant.RepaymentType;
+import lombok.*;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -29,6 +27,17 @@ public class BalanceDTO implements Serializable {
     }
 
     @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class RepaymentRequest {
+        private Long applicationId;
+        private RepaymentType type;
+        private BigDecimal repaymentAmount;
+    }
+
+    @Getter
+    @Setter
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
