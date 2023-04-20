@@ -15,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -25,6 +27,12 @@ public class RepaymentServiceImpl implements RepaymentService {
     private final EntryRepository entryRepository;
     private final BalanceService balanceService;
     private final ModelMapper modelMapper;
+
+    @Override
+    public List<RepaymentDTO.ListResponse> get(Long applicationId) {
+        List<Repayment> repayments = repaymentRepository.findAllByApplicationId(applicationId);
+        return repayments.stream().map(r -> modelMapper.map(r, RepaymentDTO.ListResponse.class)).collect(Collectors.toList());
+    }
 
     @Override
     public RepaymentDTO.Response create(Long applicationId, RepaymentDTO.Request request) {

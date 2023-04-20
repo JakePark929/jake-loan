@@ -27,4 +27,16 @@ public class RepaymentDTO implements Serializable {
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
     }
+
+    @Getter
+    @Setter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class ListResponse {
+        private Long repaymentId;
+        private BigDecimal repaymentAmount;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+    }
 }

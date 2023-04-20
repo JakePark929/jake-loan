@@ -8,6 +8,8 @@ import com.jake.loan.service.RepaymentService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RequiredArgsConstructor
 @RequestMapping("/internal/applications")
 @RestController
@@ -34,6 +36,11 @@ public class InternalController extends AbstractController {
     public ResponseDTO<Void> delete(@PathVariable Long entryId) {
         entryService.delete(entryId);
         return ok();
+    }
+
+    @GetMapping("/{applicationId}/repayments")
+    public ResponseDTO<List<RepaymentDTO.ListResponse>> getRepayments(@PathVariable Long applicationId) {
+        return ok(repaymentService.get(applicationId));
     }
 
     @PostMapping("/{applicationId}/repayments")
