@@ -47,4 +47,9 @@ public class InternalController extends AbstractController {
     public ResponseDTO<RepaymentDTO.Response> create(@PathVariable Long applicationId, @RequestBody RepaymentDTO.Request request) {
         return ok(repaymentService.create(applicationId, request));
     }
+
+    @PutMapping("/repayments/{repaymentId}")
+    public ResponseDTO<RepaymentDTO.UpdateResponse> update(@PathVariable Long repaymentId, @RequestBody RepaymentDTO.Request request) {
+        return ok(repaymentService.update(repaymentId, request));
+    }
 }
