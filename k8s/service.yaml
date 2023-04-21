@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jake-loan
+  namespace: default
+  labels:
+    app: jake-loan
+spec:
+  selector:
+    app: jake-loan
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
